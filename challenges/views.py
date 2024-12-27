@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from django.template.loader import render_to_string
 
@@ -56,4 +56,7 @@ def monthly_challenge(request, month):
         return render(request, "challenges/challenge.html", {"text":challenge_text, "month_name": month})
     
     except KeyError:
-        return render(request, '404.html', {'message': f"<h2>Challenge for {month} does not exist!</h2>"}, status=404)
+        #response_data = render_to_string("404.html")
+        #return render(request, '404.html', {'message': f"<h2>Challenge for {month} does not exist!</h2>"}, status=404)
+        #return HttpResponseNotFound(response_data)
+        raise Http404()
