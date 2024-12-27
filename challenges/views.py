@@ -1,20 +1,32 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 
 challenge_dict = {
     "january": "Eat no meat for entire month",
     "febuary": "walk 20 minutes every day",
     "march": "learn django 20 minutes every day",
-    "April": "learn C++ 20 minutes every day", 
-    "May": "learn azure 20 minutes every day", 
-    "June": "learn Automation python 20 minutes every day", 
-    "July": "swim 20 minutes every day", 
-    "August": "jogg 20 minutes every day", 
-    "September": "weight training 20 minutes every day", 
-    "October": "pillates training 20 minutes every day", 
-    "November":"lessmills training 20 minutes every day", 
-    "December": "party XMAS and New Year Celebration"
+    "april": "learn C++ 20 minutes every day", 
+    "may": "learn azure 20 minutes every day", 
+    "june": "learn Automation python 20 minutes every day", 
+    "july": "swim 20 minutes every day", 
+    "august": "jogg 20 minutes every day", 
+    "september": "weight training 20 minutes every day", 
+    "october": "pillates training 20 minutes every day", 
+    "november":"lessmills training 20 minutes every day", 
+    "december": "party XMAS and New Year Celebration"
 }
+
+def index(request):
+    list_items = ""
+    months = list(challenge_dict.keys())
+    for month in months:
+        capitalized_month = month.capitalize()
+        month_path = reverse("month-challenge", args=[month])
+        list_items += f"<li><a href=\"{month_path}\">{capitalized_month}</a></li>" 
+    response_data  = f"<ul>{list_items}</ul>"
+    return HttpResponse(response_data)
+
 
 def monthly_challenge_by_number(request, month):
     months = list(challenge_dict.keys())
@@ -22,7 +34,8 @@ def monthly_challenge_by_number(request, month):
     # Handle invalid month
     if 1 <= month <= len(months):
         redirect_month = months[month - 1]
-        return HttpResponseRedirect(f"/challenges/{redirect_month}")
+        redirect_url = reverse("month-challenge", args=[redirect_month])
+        return HttpResponseRedirect(redirect_url)
     else:
         # Redirect to a custom 404 page
         return render(request, '404.html', {'message': f"Month {month} doesn't exist!"}, status=404)
@@ -30,6 +43,7 @@ def monthly_challenge_by_number(request, month):
 def monthly_challenge(request, month):
     try:
         challenge_text = challenge_dict[month]
-        return HttpResponse(challenge_text)
+        response_data = f"<h1>{challenge_text}</h1>"
+        return HttpResponse(response_data)
     except KeyError:
-        return render(request, '404.html', {'message': f"Challenge for {month} does not exist!"}, status=404)
+        return render(request, '404.html', {'message': f"<h2>Challenge for {month} does not exist!</h2>"}, status=404)
