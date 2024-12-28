@@ -1,0 +1,18 @@
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: rgb(167, 8, 135);
+
+}
+
+h2 {
+    text-align: center;
+    color: azure;
+}
+
+.fallback {
+    text-align: center;
+    color: rgb(45, 210, 199);
+
+}
